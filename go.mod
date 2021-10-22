@@ -5,6 +5,7 @@ go 1.17
 require (
 	github.com/aws/aws-sdk-go v1.20.1
 	github.com/gorilla/mux v1.8.0
+	github.com/koding/multiconfig v0.0.0-20171124222453-69c27309b2d7
 	github.com/thedevsaddam/renderer v1.2.0
 	github.com/tus/tusd v1.7.3
 )
@@ -13,8 +14,11 @@ require (
 	cloud.google.com/go v0.40.0 // indirect
 	github.com/Azure/azure-pipeline-go v0.2.3 // indirect
 	github.com/Azure/azure-storage-blob-go v0.13.0 // indirect
+	github.com/BurntSushi/toml v0.3.1 // indirect
 	github.com/beorn7/perks v1.0.0 // indirect
 	github.com/bmizerany/pat v0.0.0-20170815010413-6226ea591a40 // indirect
+	github.com/fatih/camelcase v1.0.0 // indirect
+	github.com/fatih/structs v1.1.0 // indirect
 	github.com/golang/protobuf v1.3.5 // indirect
 	github.com/google/uuid v1.1.1 // indirect
 	github.com/googleapis/gax-go/v2 v2.0.4 // indirect

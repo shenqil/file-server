@@ -1,0 +1,22 @@
+[HTTP]
+# http监听地址
+Host = "0.0.0.0"
+# http监听端口
+Port = "9090"
+# 证书路径
+CertFile = ""
+# 证书密钥
+KeyFile = ""
+# http优雅关闭等待超时时长(单位秒)
+ShutdownTimeout = 300
+# 允许的最大内容长度(64M)
+MaxContentLength = 67108864
+# 允许输出的最大日志长度
+MaxLoggerLength = 4096
+
+[Minio]
+AccessKey = "736LS6TLIDZXI41S964W"
+SecretKey = "cbpOu4v+9onpdQCB0HqwTwPQB4+HuOJhpNpt0UhU"
+Endpoint = "http://localhost:9000"
+Bucket = "my-bucket"
+Region = "us-east-1"

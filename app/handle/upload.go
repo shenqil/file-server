@@ -1,6 +1,7 @@
 package handle
 
 import (
+	"fileServer/app/config"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -11,26 +12,20 @@ import (
 	"log"
 )
 
-var (
-	accessKey = "670AMWZOL382UJK4NAVT"
-	secretKey = "Ah0SJCv4GUWrF0FPYzuSGQab+SXZNk6+lxSZqzMU"
-	endpoint  = "http://localhost:9000"
-	bucket    = "my-bucket"
-	region    = "us-east-1"
-)
-
 // FileUpload .
 func FileUpload() *tusd.Handler {
 
+	minio := config.C.Minio
+
 	// 根据 accessKey 创建一个 session
 	newSession := session.Must(session.NewSession(&aws.Config{
-		Region:      aws.String(region),
-		Credentials: credentials.NewStaticCredentials(accessKey, secretKey, ""),
+		Region:      aws.String(minio.Region),
+		Credentials: credentials.NewStaticCredentials(minio.AccessKey, minio.SecretKey, ""),
 	}))
 
 	// 新建一个 s3 配置
 	s3Config := aws.NewConfig().
-		WithEndpoint(endpoint).
+		WithEndpoint(minio.Endpoint).
 		WithS3ForcePathStyle(true).
 		WithDisableSSL(true)
 
@@ -38,14 +33,14 @@ func FileUpload() *tusd.Handler {
 	s3Client := s3.New(newSession, s3Config)
 
 	// 使用 tusd 连接 minio
-	store := s3store.New(bucket, s3Client)
+	store := s3store.New(minio.Bucket, s3Client)
 
 	composer := tusd.NewStoreComposer()
 	store.UseIn(composer)
 
 	// 创建 tusd 配置文件
 	tusdConfig := tusd.Config{
-		BasePath:                "/upload/",
+		BasePath:                "/files/",
 		StoreComposer:           composer,
 		NotifyCompleteUploads:   true,
 		NotifyTerminatedUploads: true,

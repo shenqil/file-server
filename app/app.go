@@ -1,7 +1,7 @@
 package app
 
 import (
-	"fileServer/handle"
+	"fileServer/app/handle"
 	"github.com/gorilla/mux"
 	"net/http"
 )
@@ -11,8 +11,8 @@ func Handler() http.Handler {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/", handle.Home).Methods("GET")
-	router.PathPrefix("/upload/").Handler(http.StripPrefix("/upload/", handle.FileUpload()))
-	router.Use(mux.CORSMethodMiddleware(router))
+	router.HandleFunc("/ping", handle.Ping)
+	router.PathPrefix("/files/").Handler(http.StripPrefix("/files/", handle.FileUpload()))
 
 	return router
 }

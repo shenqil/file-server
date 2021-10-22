@@ -1,7 +1,7 @@
 package handle
 
 import (
-	"fileServer/view"
+	"fileServer/app/view"
 	"net/http"
 )
 

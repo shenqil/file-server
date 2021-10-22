@@ -2,18 +2,16 @@ package main
 
 import (
 	"fileServer/app"
+	"fileServer/app/config"
 	"log"
 	"net/http"
-	"os"
 )
 
-const defaultPort = ":3000"
-
 func main() {
-	port := os.Getenv("SERVER_PORT")
-	if port == "" {
-		port = defaultPort
-	}
+
+	config.MustLoad("./configs/config.toml")
+
+	port := ":" + config.C.HTTP.Port
 
 	handler := app.Handler()
 
