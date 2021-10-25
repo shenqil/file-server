@@ -9,8 +9,6 @@ import (
 
 func main() {
 
-	config.MustLoad("./configs/config.toml")
-
 	port := ":" + config.C.HTTP.Port
 
 	handler := app.Handler()

@@ -13,6 +13,7 @@ func Handler() http.Handler {
 	router.HandleFunc("/", handle.Home).Methods("GET")
 	router.HandleFunc("/ping", handle.Ping)
 	router.PathPrefix("/files/").Handler(http.StripPrefix("/files/", handle.FileUpload()))
+	router.HandleFunc("/nickName", handle.NickName).Methods("GET")
 
 	return router
 }

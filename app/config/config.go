@@ -14,6 +14,11 @@ var (
 	once sync.Once
 )
 
+func init() {
+	MustLoad("./configs/config.toml")
+	PrintWithJSON()
+}
+
 // MustLoad 加载配置
 func MustLoad(fpaths ...string) {
 	once.Do(func() {
@@ -34,8 +39,6 @@ func MustLoad(fpaths ...string) {
 		}
 
 		m.MustLoad(C)
-
-		PrintWithJSON()
 	})
 }
 

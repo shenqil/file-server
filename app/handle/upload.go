@@ -2,10 +2,7 @@ package handle
 
 import (
 	"fileServer/app/config"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
+	"fileServer/app/pkg/minio"
 	"github.com/tus/tusd/cmd/tusd/cli"
 	tusd "github.com/tus/tusd/pkg/handler"
 	"github.com/tus/tusd/pkg/s3store"
@@ -14,26 +11,10 @@ import (
 
 // FileUpload .
 func FileUpload() *tusd.Handler {
-
-	minio := config.C.Minio
-
-	// 根据 accessKey 创建一个 session
-	newSession := session.Must(session.NewSession(&aws.Config{
-		Region:      aws.String(minio.Region),
-		Credentials: credentials.NewStaticCredentials(minio.AccessKey, minio.SecretKey, ""),
-	}))
-
-	// 新建一个 s3 配置
-	s3Config := aws.NewConfig().
-		WithEndpoint(minio.Endpoint).
-		WithS3ForcePathStyle(true).
-		WithDisableSSL(true)
-
-	// 创建 S3 客户端
-	s3Client := s3.New(newSession, s3Config)
+	cfg := config.C.Minio
 
 	// 使用 tusd 连接 minio
-	store := s3store.New(minio.Bucket, s3Client)
+	store := s3store.New(cfg.Bucket, minio.S3Client)
 
 	composer := tusd.NewStoreComposer()
 	store.UseIn(composer)
