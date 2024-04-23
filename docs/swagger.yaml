@@ -20,6 +20,23 @@ definitions:
       id:
         type: string
     type: object
+  schema.StatusResult:
+    properties:
+      status:
+        allOf:
+        - $ref: '#/definitions/schema.StatusText'
+        description: 状态(OK)
+    type: object
+  schema.StatusText:
+    enum:
+    - OK
+    - ERROR
+    - FAIL
+    type: string
+    x-enum-varnames:
+    - OKStatus
+    - ErrorStatus
+    - FailStatus
 info:
   contact: {}
 paths:
@@ -85,6 +102,63 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 上传文件
+      tags:
+      - File
+  /file-api/v1/files/{fileName}:
+    delete:
+      parameters:
+      - description: 唯一标识
+        in: path
+        name: fileName
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{status:OK}'
+          schema:
+            $ref: '#/definitions/schema.StatusResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除文件
+      tags:
+      - File
+    get:
+      parameters:
+      - description: 唯一标识
+        in: path
+        name: fileName
+        required: true
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+        "400":
+          description: '{error:{code:0,message:无效的请求参数}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 下载指定文件
       tags:
       - File
 swagger: "2.0"

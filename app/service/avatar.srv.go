@@ -13,10 +13,10 @@ var AvatarSet = wire.NewSet(wire.Struct(new(Avatar), "*"))
 
 // Avatar 头像
 type Avatar struct {
-	AvatarModel *bucket.AvatarBucket
+	FileModel *bucket.FileBucket
 }
 
 func (a *Avatar) Upload(ctx context.Context, item schema.File) (*schema.IDResult, error) {
-	info, err := a.AvatarModel.Upload(ctx, item.Name, item.Reader, item.Size, item.Type)
+	info, err := a.FileModel.Upload(ctx, bucket.AvatarBucketName, item.Name, item.Reader, item.Size, item.Type)
 	return schema.NewIDResult(info.Key), err
 }

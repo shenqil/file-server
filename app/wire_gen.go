@@ -26,17 +26,14 @@ func BuildInjector() (*Injector, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
-	avatarBucket := &bucket.AvatarBucket{
+	fileBucket := &bucket.FileBucket{
 		MinioClient: client,
 	}
 	avatar := &service.Avatar{
-		AvatarModel: avatarBucket,
+		FileModel: fileBucket,
 	}
 	apiAvatar := &api.Avatar{
 		AvatarSrv: avatar,
-	}
-	fileBucket := &bucket.FileBucket{
-		MinioClient: client,
 	}
 	fileServer := &service.FileServer{
 		FileModel: fileBucket,

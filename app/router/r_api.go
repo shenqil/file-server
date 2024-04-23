@@ -18,9 +18,9 @@ func (a *Router) RegisterAPI(app *gin.Engine) {
 	{
 		gFiles := v1.Group("files")
 		{
-			// gFiles.GET(":name", a.Get)
+			gFiles.GET(":fileName", a.FileAPI.Get)
 			gFiles.POST("", a.FileAPI.Upload)
-			// gFiles.DELETE(":name", a.DemoAPI.Delete)
+			gFiles.DELETE(":fileName", a.FileAPI.Delete)
 		}
 
 		gAvatar := v1.Group("avatars")
