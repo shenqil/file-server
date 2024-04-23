@@ -72,38 +72,6 @@ paths:
       summary: 上传头像
       tags:
       - Avatar
-  /file-api/v1/files:
-    post:
-      consumes:
-      - multipart/form-data
-      parameters:
-      - description: file
-        in: formData
-        name: file
-        required: true
-        type: file
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/schema.IDResult'
-        "400":
-          description: '{error:{code:0,message:无效的请求参数}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "401":
-          description: '{error:{code:0,message:未授权}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-        "500":
-          description: '{error:{code:0,message:服务器错误}}'
-          schema:
-            $ref: '#/definitions/schema.ErrorResult'
-      security:
-      - ApiKeyAuth: []
-      summary: 上传文件
-      tags:
-      - File
   /file-api/v1/files/{fileName}:
     delete:
       parameters:
@@ -159,6 +127,42 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 下载指定文件
+      tags:
+      - File
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: 唯一标识
+        in: path
+        name: fileName
+        required: true
+        type: string
+      - description: file
+        in: formData
+        name: file
+        required: true
+        type: file
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schema.IDResult'
+        "400":
+          description: '{error:{code:0,message:无效的请求参数}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 上传文件
       tags:
       - File
 swagger: "2.0"

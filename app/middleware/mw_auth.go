@@ -21,6 +21,12 @@ func wrapUserAuthContext(c *gin.Context, userID string) {
 
 // UserAuthMiddleware 用户授权中间件
 func UserAuthMiddleware(a auth.Auther, skippers ...SkipperFunc) gin.HandlerFunc {
+	if !config.C.JWTAuth.Enable {
+		return func(c *gin.Context) {
+			wrapUserAuthContext(c, "debug")
+			c.Next()
+		}
+	}
 
 	return func(c *gin.Context) {
 		if SkipHandler(c, skippers...) {
@@ -32,6 +38,7 @@ func UserAuthMiddleware(a auth.Auther, skippers ...SkipperFunc) gin.HandlerFunc 
 		if err != nil {
 			if err == auth.ErrInvalidToken {
 				if config.C.IsDebugMode() {
+					wrapUserAuthContext(c, "debug")
 					c.Next()
 					return
 				}

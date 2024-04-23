@@ -4,6 +4,7 @@ import (
 	"fileServer/app/ginx"
 	"fileServer/app/schema"
 	"fileServer/app/service"
+	"fileServer/util/common"
 	"fileServer/util/errors"
 	"io"
 	"net/http"
@@ -25,24 +26,32 @@ type FileApi struct {
 // @Tags File
 // @Security ApiKeyAuth
 // @Summary 上传文件
+// @Param fileName path string true "唯一标识"
 // @Accept multipart/form-data
 // @Param file formData file true "file"
 // @Success 200 {object} schema.IDResult
 // @Failure 400 {object} schema.ErrorResult "{error:{code:0,message:无效的请求参数}}"
 // @Failure 401 {object} schema.ErrorResult "{error:{code:0,message:未授权}}"
 // @Failure 500 {object} schema.ErrorResult "{error:{code:0,message:服务器错误}}"
-// @Router /file-api/v1/files [post]
+// @Router /file-api/v1/files/{fileName} [post]
 func (a *FileApi) Upload(c *gin.Context) {
 	ctx := c.Request.Context()
 
+	fileName := c.Param("fileName")
+
+	if fileName == "" {
+		ginx.ResError(c, errors.New400Response("fileName不能为空"))
+		return
+	}
+
 	reader, err := c.Request.MultipartReader()
 	if err != nil {
-		ginx.ResError(c, err)
+		ginx.ResError(c, errors.New400Response(err.Error()))
 		return
 	}
 
 	item := schema.File{
-		Name:   "",
+		Name:   common.GenerateUniqueFilename(fileName),
 		Size:   -1,
 		Type:   "",
 		Reader: nil,
@@ -64,9 +73,6 @@ func (a *FileApi) Upload(c *gin.Context) {
 		formName := part.FormName()
 
 		if formName == "file" {
-			if item.Name == "" {
-				item.Name = part.FileName()
-			}
 			item.Type = part.Header.Get("Content-Type")
 			item.Reader = part
 			defer part.Close()
@@ -76,7 +82,7 @@ func (a *FileApi) Upload(c *gin.Context) {
 
 	result, err := a.FileSrv.Upload(ctx, item)
 	if err != nil {
-		ginx.ResError(c, err)
+		ginx.ResError(c, errors.New400Response(err.Error()))
 		return
 	}
 
@@ -99,7 +105,7 @@ func (a *FileApi) Get(c *gin.Context) {
 	object, err := a.FileSrv.Get(ctx, c.Param("fileName"))
 
 	if err != nil {
-		ginx.ResError(c, err)
+		ginx.ResError(c, errors.New400Response(err.Error()))
 		return
 	}
 	defer object.Reader.Close()
@@ -117,7 +123,7 @@ func (a *FileApi) Get(c *gin.Context) {
 	// 将图片写入响应体，并获取文件大小
 	_, err = io.Copy(c.Writer, object.Reader)
 	if err != nil {
-		ginx.ResError(c, err)
+		ginx.ResError(c, errors.New400Response(err.Error()))
 		return
 	}
 
@@ -138,7 +144,7 @@ func (a *FileApi) Delete(c *gin.Context) {
 	ctx := c.Request.Context()
 	err := a.FileSrv.Delete(ctx, c.Param("fileName"))
 	if err != nil {
-		ginx.ResError(c, err)
+		ginx.ResError(c, errors.New400Response(err.Error()))
 		return
 	}
 	ginx.ResOK(c)

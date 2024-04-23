@@ -66,57 +66,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/file-api/v1/files": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "tags": [
-                    "File"
-                ],
-                "summary": "上传文件",
-                "parameters": [
-                    {
-                        "type": "file",
-                        "description": "file",
-                        "name": "file",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/schema.IDResult"
-                        }
-                    },
-                    "400": {
-                        "description": "{error:{code:0,message:无效的请求参数}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "401": {
-                        "description": "{error:{code:0,message:未授权}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    },
-                    "500": {
-                        "description": "{error:{code:0,message:服务器错误}}",
-                        "schema": {
-                            "$ref": "#/definitions/schema.ErrorResult"
-                        }
-                    }
-                }
-            }
-        },
         "/file-api/v1/files/{fileName}": {
             "get": {
                 "security": [
@@ -145,6 +94,62 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "type": "file"
+                        }
+                    },
+                    "400": {
+                        "description": "{error:{code:0,message:无效的请求参数}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "401": {
+                        "description": "{error:{code:0,message:未授权}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:0,message:服务器错误}}",
+                        "schema": {
+                            "$ref": "#/definitions/schema.ErrorResult"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "File"
+                ],
+                "summary": "上传文件",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "唯一标识",
+                        "name": "fileName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "file",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schema.IDResult"
                         }
                     },
                     "400": {
