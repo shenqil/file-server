@@ -6,6 +6,7 @@ import (
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
+	"github.com/minio/minio-go/v7/pkg/lifecycle"
 )
 
 // Config 配置参数
@@ -61,5 +62,21 @@ func AutoMakeBucket(minioClient *minio.Client) error {
 	if err != nil {
 		return err
 	}
+
+	config := lifecycle.NewConfiguration()
+	config.Rules = []lifecycle.Rule{
+		{
+			ID:     "expire-bucket",
+			Status: "Enabled",
+			Expiration: lifecycle.Expiration{
+				Days: 1,
+			},
+		},
+	}
+	err = minioClient.SetBucketLifecycle(ctx, bucket.FileBucketName, config)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
