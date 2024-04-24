@@ -20,3 +20,26 @@ func (a *Avatar) Upload(ctx context.Context, item schema.File) (*schema.IDResult
 	info, err := a.FileModel.Upload(ctx, bucket.AvatarBucketName, item.Name, item.Reader, item.Size, item.Type)
 	return schema.NewIDResult(info.Key), err
 }
+
+func (a *Avatar) Get(ctx context.Context, fileName string) (*schema.File, error) {
+	reader, err := a.FileModel.Get(ctx, bucket.AvatarBucketName, fileName)
+	if err != nil {
+		return nil, err
+	}
+
+	stat, err := reader.Stat()
+	if err != nil {
+		return nil, err
+	}
+
+	return &schema.File{
+		Name:   fileName,
+		Size:   stat.Size,
+		Type:   stat.ContentType,
+		Reader: reader,
+	}, err
+}
+
+func (a *Avatar) Delete(ctx context.Context, fileName string) error {
+	return a.FileModel.Remove(ctx, bucket.AvatarBucketName, fileName)
+}

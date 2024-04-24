@@ -82,7 +82,7 @@ func (a *FileApi) Upload(c *gin.Context) {
 
 	result, err := a.FileSrv.Upload(ctx, item)
 	if err != nil {
-		ginx.ResError(c, errors.New400Response(err.Error()))
+		ginx.ResError(c, err)
 		return
 	}
 
@@ -144,7 +144,7 @@ func (a *FileApi) Delete(c *gin.Context) {
 	ctx := c.Request.Context()
 	err := a.FileSrv.Delete(ctx, c.Param("fileName"))
 	if err != nil {
-		ginx.ResError(c, errors.New400Response(err.Error()))
+		ginx.ResError(c, err)
 		return
 	}
 	ginx.ResOK(c)

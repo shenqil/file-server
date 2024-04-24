@@ -45,6 +45,10 @@ paths:
       consumes:
       - multipart/form-data
       parameters:
+      - description: 文件名称(需要放在表单最前面)
+        in: formData
+        name: name
+        type: string
       - description: file
         in: formData
         name: file
@@ -70,6 +74,63 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 上传头像
+      tags:
+      - Avatar
+  /file-api/v1/avatars/{name}:
+    delete:
+      parameters:
+      - description: 唯一标识
+        in: path
+        name: name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{status:OK}'
+          schema:
+            $ref: '#/definitions/schema.StatusResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除文件
+      tags:
+      - Avatar
+    get:
+      parameters:
+      - description: 唯一标识
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+        "400":
+          description: '{error:{code:0,message:无效的请求参数}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/schema.ErrorResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 下载指定文件
       tags:
       - Avatar
   /file-api/v1/files/{fileName}:
