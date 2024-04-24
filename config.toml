@@ -1,4 +1,4 @@
-# 运行模式
+# 运行模式 "debug" or "release"
 RunMode = "debug"
 
 # 是否启用swagger
@@ -22,7 +22,7 @@ MaxLoggerLength = 4096
 
 [CORS]
 # 是否启用
-Enable = false
+Enable = true
 # 允许跨域请求的域名列表(*表示全部允许)
 AllowOrigins = ["*"]
 # 允许跨域请求的请求方式列表
