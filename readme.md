@@ -27,3 +27,9 @@ go run main.go
 ```
 
 > 启动成功之后，可在浏览器中输入地址进行访问：[http://127.0.0.1:11888/swagger/index.html](http://127.0.0.1:11888/swagger/index.html)
+
+## 生成镜像文件
+
+```bash
+ docker build -t fssq/file-server:latest .
+```
